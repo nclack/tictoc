@@ -10,5 +10,5 @@
  */
 #pragma once
 
-#include "ring-fifo.h"
+#include "fifo.h"
 
