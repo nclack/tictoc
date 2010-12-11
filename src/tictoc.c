@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <tictoc.h>
 
+#define error(...) {fprintf(stderr,__VA_ARGS__); exit(-1); }
+
 #ifdef DEBUG
 #define debug(...) printf(__VA_ARGS__)
 #else
@@ -19,7 +21,8 @@ typedef uint64_t u64;
 
 #ifdef _WIN32
 #define HAVE_WIN32_TIMER
-#include <WinBase.h>
+#include <windows.h>
+#include <Strsafe.h>
 #define Guarded_Assert_WinErr(expression) \
   if(!(expression))\
   { ReportLastWindowsError();\
@@ -112,4 +115,5 @@ double toc(TicTocTimer *t)
   t->last = now;
   return delta;
 }
+
 

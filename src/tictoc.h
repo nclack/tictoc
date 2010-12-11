@@ -1,3 +1,7 @@
+#pragma once
+#ifdef __cplusplus
+extern "C"{
+#endif
 // ---------
 // Profiling
 // ---------
@@ -10,4 +14,10 @@ typedef struct _tic_toc_timer
 
 TicTocTimer tic(void);
 double      toc(TicTocTimer *last); // returns time since last in seconds and updates timer 
+double      toc(TicTocTimer *last); // returns time since last in seconds and updates timer
+
+
+#ifdef __cplusplus
+}
+#endif
                     
