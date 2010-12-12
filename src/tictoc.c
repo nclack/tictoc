@@ -7,14 +7,16 @@
 #define error(...) {fprintf(stderr,__VA_ARGS__); exit(-1); }
 
 #ifdef DEBUG
+#define DEBUG_TIC_TOC_TIMER
 #define debug(...) printf(__VA_ARGS__)
+#include <stdio.h>
 #else
 #define debug(...)
 #endif
 
 typedef uint64_t u64;
 
-#ifdef _APPLE_
+#ifdef __APPLE__
 #define HAVE_MACH_TIMER
 #include <mach/mach_time.h>
 #endif
@@ -67,12 +69,14 @@ void ReportLastWindowsError(void)
 }
 #endif
 
+TicTocTimer g_last;
+
 TicTocTimer tic(void)
 { TicTocTimer t = {0,0};
 #ifdef HAVE_MACH_TIMER
   mach_timebase_info_data_t rate_nsec;
   mach_timebase_info(&rate_nsec);
-  t.rate = 1000000000LL * rate_nsec.numel / rate_nsec.denom;
+  t.rate = 1000000000LL * rate_nsec.numer / rate_nsec.denom;
   t.last = mach_absolute_time();
 #endif
 #ifdef HAVE_WIN32_TIMER
@@ -87,13 +91,13 @@ TicTocTimer tic(void)
   
 #ifdef DEBUG_TIC_TOC_TIMER  
   //Guarded_Assert( t.rate > 0 );
-  debug("Tic() timer frequency: %I64u Hz\r\n"
+  debug("Tic() timer frequency: %llu Hz\r\n"
         "           resolution: %g ns\r\n"
-        "               counts: %I64u\r\n",t.rate, 
+        "               counts: %llu\r\n",t.rate, 
                                         1e9/(double)t.rate, 
                                         t.last);
 #endif  
-  
+  g_last = t;
   return t;
 }
 
@@ -102,6 +106,7 @@ TicTocTimer tic(void)
 double toc(TicTocTimer *t)
 { u64 now;
   double delta;
+  if(!t) t=&g_last;
 #ifdef HAVE_MACH_TIMER
   now = mach_absolute_time();
 #endif
@@ -115,5 +120,4 @@ double toc(TicTocTimer *t)
   t->last = now;
   return delta;
 }
-
 
