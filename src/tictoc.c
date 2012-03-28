@@ -15,13 +15,19 @@
 #endif
 
 typedef uint64_t u64;
+#if !defined(__APPLE__) && !defined(_MSC_VER)
+#define HAVE_POSIX_TIMER
+#include <time.h>
+//#define CLOCKID CLOCK_THREAD_CPUTIME_ID
+#define CLOCKID CLOCK_REALTIME
+#endif
 
 #ifdef __APPLE__
 #define HAVE_MACH_TIMER
 #include <mach/mach_time.h>
 #endif
 
-#ifdef _WIN32
+#ifdef _MSC_VER
 #define HAVE_WIN32_TIMER
 #include <windows.h>
 #include <Strsafe.h>
@@ -73,6 +79,13 @@ TicTocTimer g_last;
 
 TicTocTimer tic(void)
 { TicTocTimer t = {0,0};
+#ifdef HAVE_POSIX_TIMER
+  struct timespec rate,time;
+  clock_getres(CLOCKID,&rate);
+  clock_gettime(CLOCKID,&time);
+  t.rate = 1000000000LL*rate.tv_nsec; // in Hz
+  t.last = time.tv_sec*1000000000LL+time.tv_nsec;
+#endif
 #ifdef HAVE_MACH_TIMER
   mach_timebase_info_data_t rate_nsec;
   mach_timebase_info(&rate_nsec);
@@ -107,6 +120,12 @@ double toc(TicTocTimer *t)
 { u64 now;
   double delta;
   if(!t) t=&g_last;
+#ifdef HAVE_POSIX_TIMER
+  { struct timespec time;
+    clock_gettime(CLOCKID,&time);
+    now = time.tv_sec*1000000000LL+time.tv_nsec;
+  }
+#endif
 #ifdef HAVE_MACH_TIMER
   now = mach_absolute_time();
 #endif

@@ -42,6 +42,8 @@ if(GTEST_FOUND)
 # Config
 #
 
+find_package(Threads)
+find_library(LIBRT NAMES rt)
 
 ##
 # Add tests
@@ -51,7 +53,11 @@ if(GTEST_FOUND)
   )
   target_link_libraries(alltests
     ${GTEST_BOTH_LIBRARIES}
+    ${CMAKE_THREAD_LIBS_INIT}
   )
+  if(LIBRT)
+    target_link_libraries(alltests ${LIBRT})
+  endif()
   set_target_properties(alltests
       PROPERTIES
       COMPILE_DEFINITIONS
