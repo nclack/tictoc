@@ -18,8 +18,11 @@ typedef uint64_t u64;
 #if !defined(__APPLE__) && !defined(_MSC_VER)
 #define HAVE_POSIX_TIMER
 #include <time.h>
-//#define CLOCKID CLOCK_THREAD_CPUTIME_ID
+#ifdef CLOCK_MONOTONIC
+#define CLOCKID CLOCK_MONOTONIC
+#else
 #define CLOCKID CLOCK_REALTIME
+#endif
 #endif
 
 #ifdef __APPLE__
