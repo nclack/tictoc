@@ -1,20 +1,40 @@
 #include <tictoc.h>
 
+#ifdef _MSC_VER
+#include <windows.h>
+void usleep(int us) {
+    __int64 time1 = 0, time2 = 0, freq = 0, w;
+
+    QueryPerformanceFrequency((LARGE_INTEGER *)&freq);
+    w=us*freq/1000000;
+    QueryPerformanceCounter((LARGE_INTEGER *) &time1);
+
+    do {
+        QueryPerformanceCounter((LARGE_INTEGER *) &time2);
+    } while((time2-time1) < w);
+}
+#endif
+
 #ifdef HAVE_GTEST
 #include <gtest/gtest.h>
 TEST(TicTocTimerTest,Basic)
 {
   TicTocTimer t = tic();
-  ASSERT_TRUE(toc(&t)>0.0);
+  EXPECT_GE(toc(&t),0.0);
 }
 TEST(TicTocTimerTest,TicTocNULL)
 {
   tic();
-  ASSERT_TRUE(toc(NULL)>0.0);
+  EXPECT_GE(toc(NULL),0.0);
 }
 TEST(TicTocTimerTest,TocNULL)
+{ EXPECT_GE(toc(NULL),0.0);
+}
+TEST(TicTocTimerTest,TicToc10MSecPrecision)
 {
-  ASSERT_TRUE(toc(NULL)>0.0);
+  tic();
+  usleep(10000);
+  ASSERT_NEAR(toc(NULL),0.01,0.005);
 }
 TEST(TicTocTimerTest,TicTocMSecPrecision)
 {
@@ -33,5 +53,11 @@ TEST(TicTocTimerTest,TicToc10USecPrecision)
   tic();
   usleep(10);
   ASSERT_NEAR(toc(NULL),0.00001,0.000005);
+}
+TEST(TicTocTimerTest,TicToc1USecPrecision)
+{
+  tic();
+  usleep(1);
+  ASSERT_NEAR(toc(NULL),0.000001,0.0000005);
 }
 #endif

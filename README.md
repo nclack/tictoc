@@ -6,13 +6,8 @@ Timers are useful for profiling and optimizing code, but access typically
 require different non-portable calls to access msec or better precision.  So, I
 wrapped these up and pu them behaind a consistent API.
 
-The test suite will provide some feedback about how reliable the timer is at different 
-resolutions on your system.  You should run the tests several times.
-
-
 ## TODO
 
- - do the tests run on Windows?  They rely on usleep
  - Linux timer 
 
 ## Incorporating into your project
@@ -49,6 +44,16 @@ int main(int argc, char* argv[])
 
 The last example uses a global timer.  Using the global timer from different threads 
 may produce strange results.
+
+## Reliability
+
+The test suite runs tests for different resolutions that rely on some
+implementation of `usleep()` to pause for semi-controlled lengths of 
+time.  However, this isn't a reliable way to measure the actual 
+precision of your system's timer.
+
+You'll have to measure that for yourself according to what is appropriate for
+your application.
 
 ## Details
 
