@@ -2,18 +2,15 @@
 
 A high-resolution timer for Windows, OS X, and Linux.
 
-Timers are useful for profiling and optimizing code, but access typically
-require different non-portable calls to access msec or better precision.  So, I
-wrapped these up and pu them behaind a consistent API.
-
-## TODO
-
- - Linux timer 
+Performance timers are useful for profiling and optimizing code, 
+but using one typically involves system specific calls.  So, I
+wrapped these up and put them behind a simple API.
 
 ## Incorporating into your project
 
  - Either build and link against the static library.
  - Or just copy tictoc.[ch] to your project.
+ - On linux, you'll need to link against librt.
 
 ## Usage
 
@@ -38,7 +35,7 @@ An even simpler example:
 int main(int argc, char* argv[])
 { 
   tic();
-  printf("%f\n",toc());
+  printf("%f\n",toc(0));
 }
 ```
 
