@@ -14,28 +14,29 @@ enable_testing(true)
 
 #find gtest
 #message(${ROOT_3RDPARTY_PATH})
-set(GTEST_ROOT "${ROOT_3RDPARTY_PATH}/gtest-1.5.0")
+set(GTEST_ROOT "${ROOT_3RDPARTY_PATH}/gtest")
 set(GTEST_MSVC_SEARCH MD)
-find_package(GTest REQUIRED)
-include_directories(${GTEST_INCLUDE_DIRS})
+find_package(GTest)
+if(GTEST_FOUND)
+  include_directories(${GTEST_INCLUDE_DIRS})
 
 ##
 # Test Sources
 #
-include_directories(../src)
-file(GLOB TEST_SOURCES
-  ../src/*.c
-  ../src/*.cc
-  ../src/*.cpp
-  ../src/*.h
-  ../src/*.hh
-  ../src/*.hpp
-  *.cc
-  *.cpp
-  *.h
-  *.hh
-  *.hpp
-)
+  include_directories(../src)
+  file(GLOB TEST_SOURCES
+    ../src/*.c
+    ../src/*.cc
+    ../src/*.cpp
+    ../src/*.h
+    ../src/*.hh
+    ../src/*.hpp
+    *.cc
+    *.cpp
+    *.h
+    *.hh
+    *.hpp
+  )
 
 ##
 # Config
@@ -45,17 +46,18 @@ file(GLOB TEST_SOURCES
 ##
 # Add tests
 #
-add_executable(alltests alltests.cc 
-  ${TEST_SOURCES} 
-)
-target_link_libraries(alltests
-  ${GTEST_BOTH_LIBRARIES}
-)
-set_target_properties(alltests
-    PROPERTIES
-    COMPILE_DEFINITIONS
-      HAVE_GTEST     
-)
-if(TEST_SOURCES)
-  gtest_add_tests(alltests " " ${TEST_SOURCES})
-endif()
+  add_executable(alltests alltests.cc 
+    ${TEST_SOURCES} 
+  )
+  target_link_libraries(alltests
+    ${GTEST_BOTH_LIBRARIES}
+  )
+  set_target_properties(alltests
+      PROPERTIES
+      COMPILE_DEFINITIONS
+        HAVE_GTEST     
+  )
+  if(TEST_SOURCES)
+    gtest_add_tests(alltests " " ${TEST_SOURCES})
+  endif()
+endif(GTEST_FOUND)

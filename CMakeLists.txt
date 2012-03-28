@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.6)
 project(TicTocTimer)
-#set(CMAKE_VERBOSE_MAKEFILE 1) ## Useful for debuging the build
+
+set(ROOT_3RDPARTY_PATH ${PROJECT_SOURCE_DIR}/3rdParty)
 
 set(TIMER_SRCS
   src/tictoc.c
