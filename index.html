@@ -1,0 +1,111 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Tictoc by nclack</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Tictoc</h1>
+        <p>High-resolution timer for Windows, OSX, and Linux</p>
+        <p class="view"><a href="https://github.com/nclack/tictoc">View the Project on GitHub <small>nclack/tictoc</small></a></p>
+        <ul>
+          <li><a href="https://github.com/nclack/tictoc/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/nclack/tictoc/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/nclack/tictoc">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>TicTocTimer</h1>
+
+<p>A high-resolution timer for Windows, OS X, and Linux.</p>
+
+<p>Performance timers are useful for profiling and optimizing code, 
+but using one typically involves system specific calls.  So, I
+wrapped these up and put them behind a simple API.</p>
+
+<h2>Incorporating into your project</h2>
+
+<ul>
+<li>Either build and link against the static library.</li>
+<li>Or just copy tictoc.[ch] to your project.</li>
+<li>On linux, you'll need to link against librt.</li>
+</ul><h2>Usage</h2>
+
+<p>Simple example:</p>
+
+<div class="highlight">
+<pre><span class="cp">#include "tictoc.h"</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span>
+<span class="p">{</span> 
+  <span class="n">TicTocTimer</span> <span class="n">clock</span> <span class="o">=</span> <span class="n">tic</span><span class="p">();</span>
+  <span class="n">time_consuming_operation</span><span class="p">();</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">"Elapsed time %f seconds.</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">toc</span><span class="p">(</span><span class="o">&amp;</span><span class="n">clock</span><span class="p">));</span> <span class="c1">// prints time since last tic()  </span>
+  <span class="n">another_time_consuming_operation</span><span class="p">();</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">"Elapsed time %f seconds.</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">toc</span><span class="p">(</span><span class="o">&amp;</span><span class="n">clock</span><span class="p">));</span> <span class="c1">// prints time since last toc()</span>
+<span class="p">}</span>
+</pre>
+</div>
+
+
+<p>An even simpler example:</p>
+
+<div class="highlight">
+<pre><span class="cp">#include "tictoc.h"</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span>
+<span class="p">{</span> 
+  <span class="n">tic</span><span class="p">();</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">"%f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">toc</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+<span class="p">}</span>
+</pre>
+</div>
+
+
+<p>The last example uses a global timer.  Using the global timer from different threads 
+may produce strange results.</p>
+
+<h2>Reliability</h2>
+
+<p>I wrote a little test suite to test the precision, but the tests are badly designed; they 
+probably don't predict performance.  I left them in the hope that one day they will be
+fixed!</p>
+
+<p>The test suite runs tests for different resolutions that rely on some
+implementation of <code>usleep()</code> to pause for semi-controlled lengths of 
+time.  However, this isn't a reliable way to measure the actual 
+precision of your system's timer.</p>
+
+<p>You'll have to measure that for yourself according to what is appropriate for
+your application.</p>
+
+<h2>Details</h2>
+
+<ul>
+<li>On Windows, tictoc uses <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms644904(v=vs.85).aspx">QueryPerformanceCounter</a>
+</li>
+<li>On OS X, tictoc uses <a href="https://developer.apple.com/library/mac/#documentation/Darwin/Conceptual/KernelProgramming/services/services.html">mach_absolute_time</a>
+</li>
+<li>On Linux, tictoc uses <a href="http://www.tin.org/bin/man.cgi?section=3&amp;topic=clock_gettime">clock_gettime</a>
+</li>
+</ul>
+      </section>
+    </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/nclack">nclack</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+    
+  </body>
+</html>
