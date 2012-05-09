@@ -2,7 +2,7 @@
 // Profiling
 // ---------
 #include <stdint.h>
-#include <tictoc.h>
+#include "tictoc.h"
 
 #define error(...) {fprintf(stderr,__VA_ARGS__); exit(-1); }
 
