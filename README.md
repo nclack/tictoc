@@ -12,6 +12,17 @@ wrapped these up and put them behind a simple API.
  - Or just copy tictoc.[ch] to your project.
  - On linux, you'll need to link against librt.
 
+### With [CMake][4]
+
+```cmake
+  add_subdirectory(tictoc) #adds targets for the static library, tests, and docs
+  link_directories(${tictoc_BINARY_DIR})
+  include directories(tictoc)
+  ...
+  target_link_libraries(my-project tictoc)
+
+```
+
 ## Usage
 
 Simple example:
@@ -61,4 +72,4 @@ your application.
 [1]: http://msdn.microsoft.com/en-us/library/windows/desktop/ms644904(v=vs.85).aspx
 [2]: https://developer.apple.com/library/mac/#documentation/Darwin/Conceptual/KernelProgramming/services/services.html
 [3]: http://www.tin.org/bin/man.cgi?section=3&topic=clock_gettime
-
+[4]: http://www.cmake.org/

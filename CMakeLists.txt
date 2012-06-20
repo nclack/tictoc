@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 2.6)
-project(TicTocTimer)
-
-set(ROOT_3RDPARTY_PATH ${PROJECT_SOURCE_DIR}/3rdParty)
+project(tictoc)
 
 find_library(LIBRT NAMES rt)
 
@@ -10,11 +8,35 @@ set(TIMER_SRCS
   src/tictoc.h
   )
 include_directories(src)
-add_library(TicTocTimer SHARED STATIC
+add_library(tictoc SHARED STATIC
   ${TIMER_SRCS}
   )
 if(LIBRT)
-  target_link_libraries(TicTocTimer ${LIBRT})
+  target_link_libraries(tictoc ${LIBRT})
 endif()
 
-add_subdirectory(test)
+###############################################################################
+#  Testing
+###############################################################################
+
+find_path(GTEST_ROOT
+  CMakeLists.txt
+  HINTS ${ROOT_3RDPARTY_PATH}
+  PATH_SUFFIXES
+    gtest-1.6.0
+  DOC "The root directory of the gtest install prefix")
+find_package(gtest)
+if(GTEST_FOUND)
+  enable_testing()
+  include_directories(${PROJECT_SOURCE_DIR})
+  include_directories(${GTEST_INCLUDE_DIRS})
+  file(GLOB TEST_SOURCES test/*.cc)
+  add_executable(tictoc-tests
+    ${TEST_SOURCES}
+    )
+  target_link_libraries(tictoc-tests
+    ${GTEST_BOTH_LIBRARIES}
+    tictoc
+    )
+  add_test(TestTicToc tictoc-tests)
+endif()

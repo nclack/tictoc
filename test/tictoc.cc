@@ -1,3 +1,4 @@
+#include <gtest/gtest.h>
 #include <tictoc.h>
 
 #ifdef _MSC_VER
@@ -15,8 +16,6 @@ void usleep(int us) {
 }
 #endif
 
-#ifdef HAVE_GTEST
-#include <gtest/gtest.h>
 TEST(TicTocTimerTest,Basic)
 {
   TicTocTimer t = tic();
@@ -60,4 +59,3 @@ TEST(TicTocTimerTest,TicToc1USecPrecision)
   usleep(1);
   ASSERT_NEAR(toc(NULL),0.000001,0.0000005);
 }
-#endif
