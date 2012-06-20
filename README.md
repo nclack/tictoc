@@ -12,12 +12,14 @@ wrapped these up and put them behind a simple API.
  - Or just copy tictoc.[ch] to your project.
  - On linux, you'll need to link against librt.
 
-### With [CMake][4]
+### With [CMake][4]:
 
+ Unpack the source tree (or use git submodule) to a subdirectory in your project.
+ For example, `modules/tictoc`.
 ```cmake
-  add_subdirectory(tictoc) #adds targets for the static library, tests, and docs
+  add_subdirectory(modules/tictoc) #adds targets for the static library, tests, and docs
   link_directories(${tictoc_BINARY_DIR})
-  include directories(tictoc)
+  include_directories(modules/tictoc)
   ...
   target_link_libraries(my-project tictoc)
 
