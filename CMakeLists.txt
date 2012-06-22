@@ -21,11 +21,12 @@ endif()
 
 find_path(GTEST_ROOT
   CMakeLists.txt
-  HINTS ${ROOT_3RDPARTY_PATH}
+  HINTS ${ROOT_3RDPARTY_PATH} ~/src/3rdParty
   PATH_SUFFIXES
     gtest-1.6.0
   DOC "The root directory of the gtest install prefix")
-find_package(gtest)
+find_package(GTest)
+find_package(Threads)
 if(GTEST_FOUND)
   enable_testing()
   include_directories(${PROJECT_SOURCE_DIR})
@@ -36,6 +37,7 @@ if(GTEST_FOUND)
     )
   target_link_libraries(tictoc-tests
     ${GTEST_BOTH_LIBRARIES}
+    ${CMAKE_THREAD_LIBS_INIT}
     tictoc
     )
   add_test(TestTicToc tictoc-tests)
